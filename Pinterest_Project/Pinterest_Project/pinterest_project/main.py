@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, SecretStr
+import os
+from dotenv import load_dotenv
+
 
 
 app = FastAPI(
