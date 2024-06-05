@@ -2,13 +2,18 @@
 name = "pinterest-proyect"
 version = "0.1.0"
 description = ""
-authors = ["Edison Alvarez <edalvarezv@udistrital.edu.co>"]
+authors = ["Edison Alvarez <edalvarezv@udistrital.edu.co> && Juan Lozada <jdlozadag@udistrital.edu.co"]
 readme = "README.md"
+
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "^0.111.0"
 sqlalchemy = "^2.0.30"
+pydantic = "^2.7.3"
+click = "^8.1.7"
+uvicorn = "^0.30.1"
 
 
 [tool.poetry.group.dev.dependencies]
