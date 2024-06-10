@@ -2,7 +2,7 @@
 name = "pinterest-proyect"
 version = "0.1.0"
 description = ""
-authors = ["Edison Alvarez <edalvarezv@udistrital.edu.co> && Juan Lozada <jdlozadag@udistrital.edu.co"]
+authors = ["Edison Alvarez Juan Lozada <edalvarezv@udistrital.edu.co>"]
 readme = "README.md"
 
 
@@ -15,6 +15,8 @@ pydantic = "^2.7.3"
 click = "^8.1.7"
 uvicorn = "^0.30.1"
 python-dotenv = "^1.0.1"
+psycopg2 = "^2.9.9"
+psutil = "^5.9.8"
 
 
 [tool.poetry.group.dev.dependencies]
