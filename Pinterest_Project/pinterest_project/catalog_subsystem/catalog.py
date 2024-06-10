@@ -4,27 +4,20 @@ inherits from CatalogInterface
 
 Autor: Edison David Álvarez <edalvarezv@udistrital.edu.co>
 """
-
+from typing import List
 from .catalog_interface import CatalogInterface
 from ..board_subsystem.board import Board
+from ..board_subsystem.pin import Pin
 
 class Catalog(CatalogInterface):
     """
     This is the specific Catalog class that wound from CatalgoInterface
     """
-    __board_list = []
 
-    def __new__(cls):
-        """
-        This is the private constructor of the Catalog, so that it is 
-        a Singelton
-        """
-        if cls.__board_list is None:
-            cls._instance = super().__new__(cls)
-            # Data initialization through the database
-        return cls.__board_list
+    def __init__(self):
+        self.__board_list = []
 
-    def get_all_boards(self):
+    def get_all_boards(self) -> List[Board]:
         """
         This method retrieves all boards from the catalog.
 
@@ -53,21 +46,58 @@ class Catalog(CatalogInterface):
         if board in self.__board_list:
             self.__board_list.remove(board)
 
-    def get_all_pins(self):
+    def get_all_pins(self) -> List[Pin]:
         """
         This method recovers all the pines from the catalgo boards.
 
         Returns:
-        list[Pin]: A list of all pines in the catalog.
+            list[Pin]: A list of all pines in the catalog.
         """
         pins = []
         for board in self.__board_list:
             pins.extend(board.get_pins())
         return pins
 
-    def get_board_by_category(self, category: str):
+    def add_pin(self, board: Board, pin: Pin):
         """
-        This method  retrieves all boards in a specific category from the catalog.
+        This method adds a new pin to a specific board in the catalog.
+
+        Args:
+            board (Board): The board to which the pin will be added.
+            pin (Pin): The pin object to be added to the board.
+        """
+        if board in self.__board_list:
+            board.add_pin(pin)
+
+    def delete_pin(self, board: Board, pin: Pin):
+        """
+        This method deletes a pin from a specific board in the catalog.
+
+        Args:
+            board (Board): The board from which the pin will be removed.
+            pin (Pin): The pin object to be removed from the board.
+        """
+        if board in self.__board_list:
+            board.delete_pin(pin)
+
+    def get_board_by_name(self, name: str) -> Board:
+        """
+        This method retrieves a board by its name.
+
+        Args:
+            name (str): The name of the board to retrieve.
+
+        Returns:
+            Board: The board with the specified name, or None if not found.
+        """
+        for board in self.__board_list:
+            if board.name == name:
+                return board
+        return None
+
+    def get_boards_by_category(self, category: str)  -> List[Board]:
+        """
+        This method retrieves all boards in a specific category from the catalog.
 
         Args:
             category (str): The category to filter the boards by.
@@ -75,8 +105,29 @@ class Catalog(CatalogInterface):
         Returns:
             list[Board]: A list of boards that belong to the specified category.
         """
+        boards_in_category = []
+        for board in self.__board_list:
+            for categories in board.categories:
+                if categories == category:
+                    boards_in_category.append(board)
+        return boards_in_category
 
-    def get_pin_by_category(self, category: str):
+    def get_pin_by_name(self, name: str) -> Pin:
+        """
+        This method retrieves a pin by its name from all boards in the catalog.
+
+        Args:
+            name (str): The name of the pin to retrieve.
+
+        Returns:
+            Pin: The pin with the specified name, or None if not found.
+        """
+        for board in self.__board_list:
+            pin = board.get_pin_by_name(name)
+            return pin
+        return None
+
+    def get_pins_by_category(self, category: str) -> List[Pin]:
         """
         This method retrieves all pins in a specific category from the catalog.
 
@@ -84,5 +135,10 @@ class Catalog(CatalogInterface):
             category (str): The category to filter the pins by.
 
         Returns:
-            list[Pin]: A list of pins that belong to the specified category
+            list[Pin]: A list of pins that belong to the specified category.
         """
+        pins_in_category = []
+        for board in self.__board_list:
+            pins = board.get_pin_by_category(category)
+            pins_in_category.extend(pins)
+        return pins_in_category
