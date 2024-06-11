@@ -6,8 +6,8 @@ Autor: Edison David Álvarez <edalvarezv@udistrital.edu.co>
 """
 from typing import List
 from .catalog_interface import CatalogInterface
-from ..board_subsystem.board import Board
-from ..board_subsystem.pin import Pin
+from ..board_subsystem import Board
+from ..board_subsystem import Pin
 
 class Catalog(CatalogInterface):
     """
@@ -69,7 +69,7 @@ class Catalog(CatalogInterface):
         if board in self.__board_list:
             board.add_pin(pin)
 
-    def delete_pin(self, board: Board, pin: Pin):
+    def delete_pin(self, pin: Pin):
         """
         This method deletes a pin from a specific board in the catalog.
 
@@ -77,8 +77,10 @@ class Catalog(CatalogInterface):
             board (Board): The board from which the pin will be removed.
             pin (Pin): The pin object to be removed from the board.
         """
-        if board in self.__board_list:
-            board.delete_pin(pin)
+        for board in self.__board_list:
+            for pins in board.get_all_pins():
+                if pins == pin:
+                    board.delete_pin(pin)
 
     def get_board_by_name(self, name: str) -> Board:
         """

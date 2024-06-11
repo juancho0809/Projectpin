@@ -6,8 +6,8 @@ Autor: Edison David Álvarez <edalvarezv@udistrital.edu.co>
 
 from abc import ABC, abstractmethod
 from typing import List
-from ..board_subsystem.board import Board
-from ..board_subsystem.pin import Pin
+from ..board_subsystem import Board
+from ..board_subsystem import Pin
 
 class CatalogInterface(ABC):
     """
@@ -60,7 +60,7 @@ class CatalogInterface(ABC):
         """
 
     @abstractmethod
-    def delete_pin(self, board: Board, pin: Pin):
+    def delete_pin(self, pin: Pin):
         """
         This method deletes a pin from a specific board in the catalog.
 

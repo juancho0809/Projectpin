@@ -9,8 +9,8 @@ import time
 import logging
 import psutil
 from ..catalog_subsystem.catalog_interface import CatalogInterface
-from ..board_subsystem.board import Board
-from ..board_subsystem.pin import Pin
+from ..board_subsystem import Board
+from ..board_subsystem import Pin
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -94,7 +94,7 @@ class TimePerformanceDecorator(CatalogInterface):
         end = time.time()
         logger.info("add_pin took %s seconds", end - start)
 
-    def delete_pin(self, board: Board, pin: Pin):
+    def delete_pin(self, pin: Pin):
         """
         Deletes a pin from a specific board in the catalog and logs the
         time taken for the operation.
@@ -104,7 +104,7 @@ class TimePerformanceDecorator(CatalogInterface):
             pin (Pin): The pin to be deleted from the board.
         """
         start = time.time()
-        self.__catalog.delete_pin(board, pin)
+        self.__catalog.delete_pin(pin)
         end = time.time()
         logger.info("delete_pin took %s seconds", end - start)
 
@@ -256,7 +256,7 @@ class MemoryPerformanceDecorator(CatalogInterface):
         end = self.__process.memory_info().rss / 1024
         logger.info("add_pin took %s Kb", round((end - start), 2))
 
-    def delete_pin(self, board: Board, pin: Pin):
+    def delete_pin(self, pin: Pin):
         """
         Deletes a pin from a board in the catalog and logs the memory
         consumption of the operation.
@@ -266,7 +266,7 @@ class MemoryPerformanceDecorator(CatalogInterface):
             pin (Pin): The pin object to be deleted.
         """
         start = self.__process.memory_info().rss / 1024
-        self.__catalog.delete_pin(board, pin)
+        self.__catalog.delete_pin(pin)
         end = self.__process.memory_info().rss / 1024
         logger.info("delete_pin took %s Kb", round((end - start), 2))
 
