@@ -17,9 +17,6 @@ class Pin:
         self.url = url
         self.categories = []
 
-    def modify_pin(self):
-        """This method is responsible for modifying an existing pin"""
-
     def add_category_pin(self, category: str):
         """
         This method adds a new category to the pin

@@ -1,14 +1,18 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, Table
+"""
+This is the module that was used to create the entities and relationships of the database.
+
+Author: Juan Diego Lozada <juandiegolozada123@gmail.com>
+"""
+
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from dotenv import load_dotenv
-import os
 
 Base = declarative_base()
 
 # Table to represent the many-to-many relationship between Category and Pin
 category_pin_table = Table('category_pin', Base.metadata,
-    Column('idcategory', Integer, ForeignKey('category.idcategory'), 
+    Column('idcategory', Integer, ForeignKey('category.idcategory'),
     primary_key=True, nullable=False),
     Column('idpin', String(5), ForeignKey('pin.idpin'), primary_key=True, nullable=False)
 )
@@ -81,9 +85,7 @@ class User(Base):
     boards = relationship('Board', back_populates='user')
 
 # Database setup
-load_dotenv()
-
-DATABASE_CONNECTION = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+DATABASE_CONNECTION = 'sqlite:///data.db'
 db_conn = create_engine(DATABASE_CONNECTION)
 Base.metadata.create_all(db_conn)
 

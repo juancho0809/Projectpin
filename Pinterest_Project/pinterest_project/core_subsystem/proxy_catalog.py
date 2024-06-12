@@ -9,7 +9,7 @@ Authors: Edison David Alvarez <edalvarezv@udistrital.edu.co>
 from typing import List
 from ..catalog_subsystem import Catalog, CatalogInterface, TimeDecorator, MemoryDecorator
 from ..board_subsystem import Board, Pin
-
+from ..data_base.data_base import *
 
 class CatalogProxy(CatalogInterface):
     """This class is a proxy for the catalog class."""
@@ -22,9 +22,11 @@ class CatalogProxy(CatalogInterface):
         return cls._instance_catalog
 
     def __init__(self):
-        self.__catalog = Catalog()
-        self.__catalog = TimeDecorator(self.__catalog)
-        self.__catalog = MemoryDecorator(self.__catalog)
+        if not hasattr(self, '_initialized'):
+            self.__catalog = Catalog()
+            self.__catalog = TimeDecorator(self.__catalog)
+            self.__catalog = MemoryDecorator(self.__catalog)
+            self._initialized = True
 
     def get_all_boards(self) -> List[Board]:
         """
@@ -42,6 +44,7 @@ class CatalogProxy(CatalogInterface):
         Args:
             board (Board): The board object to be added to the catalog.
         """
+        insert_board(board.name, board.id_board, "1")
         return self.__catalog.add_board(board)
 
     def delete_board(self, board: Board):
@@ -70,6 +73,12 @@ class CatalogProxy(CatalogInterface):
             board (Board): The board to which the pin will be added.
             pin (Pin): The pin object to be added to the board.
         """
+        insert_pin(pin.id_pin, pin.user_id, pin.name, pin.description, pin.url, " ", board.id_board)
+        for category in pin.categories:
+            id_categ = get_next_category_id()
+            insert_category(id_categ, category)
+            insert_category_pin(id_categ, pin.id_pin)
+
         return self.__catalog.add_pin(board, pin)
 
     def delete_pin(self, pin: Pin):
@@ -80,6 +89,7 @@ class CatalogProxy(CatalogInterface):
             board (Board): The board from which the pin will be removed.
             pin (Pin): The pin object to be removed from the board.
         """
+        delete_pin(pin.id_pin)
         return self.__catalog.delete_pin(pin)
 
     def get_board_by_name(self, name: str) -> Board:
@@ -129,3 +139,5 @@ class CatalogProxy(CatalogInterface):
             list[Pin]: A list of pins that belong to the specified category.
         """
         return self.__catalog.get_boards_by_category(category)
+
+catalog = CatalogProxy()
