@@ -7,11 +7,11 @@ Authors: Edison David Alvarez <edalvarezv@udistrital.edu.co>
 """
 
 from typing import List
-from ..catalog_subsystem import Catalog, TimeDecorator, MemoryDecorator
+from ..catalog_subsystem import Catalog, CatalogInterface, TimeDecorator, MemoryDecorator
 from ..board_subsystem import Board, Pin
 
 
-class CatalogProxy:
+class CatalogProxy(CatalogInterface):
     """This class is a proxy for the catalog class."""
 
     _instance_catalog = None
@@ -31,72 +31,56 @@ class CatalogProxy:
         This method retrieves all boards from the catalog.
 
         Returns:
-            List[Board]: A list of all boards in the catalog.
+            list[Board]: A list of all boards in the catalog.
         """
         return self.__catalog.get_all_boards()
 
-    def add_board(self, id_board: int, user_id: int, name: str, description: str):
+    def add_board(self, board: Board):
         """
         This method adds a new board to the catalog.
 
         Args:
-            id_board (int): The ID of the board.
-            user_id (int): The ID of the user.
-            name (str): The name of the board.
-            description (str): A description of the board.
+            board (Board): The board object to be added to the catalog.
         """
-        board = Board(id_board, user_id, name, description)
-        self.__catalog.add_board(board)
+        return self.__catalog.add_board(board)
 
-    def delete_board(self, board_id):
+    def delete_board(self, board: Board):
         """
-        This method deletes a board from the catalog by its ID.
+        This method deletes a board from the catalog.
 
         Args:
-            board_id (int): The ID of the board to delete.
+            board (Board): The board object to be deleted from the catalog.
         """
-        for board in self.__catalog.get_all_boards():
-            if board.board_id == board_id:
-                self.__catalog.delete_board(board)
+        return self.__catalog.delete_board(board)
 
     def get_all_pins(self) -> List[Pin]:
         """
-        This method retrieves all pins from the catalog.
+        This method recovers all the pines from the catalgo boards.
 
         Returns:
-            List[Pin]: A list of all pins in the catalog.
+            list[Pin]: A list of all pines in the catalog.
         """
         return self.__catalog.get_all_pins()
 
-    def add_pin(self, id_board: int, id_pin: str, user_id: int,
-                name: str, description: str, url: str):
+    def add_pin(self, board: Board, pin: Pin):
         """
-        This method adds a new pin to a specified board in the catalog.
+        This method adds a new pin to a specific board in the catalog.
 
         Args:
-            id_board (int): The ID of the board to add the pin to.
-            id_pin (str): The ID of the pin.
-            user_id (int): The ID of the user.
-            name (str): The name of the pin.
-            description (str): A description of the pin.
-            url (str): The URL associated with the pin.
+            board (Board): The board to which the pin will be added.
+            pin (Pin): The pin object to be added to the board.
         """
-        pin = Pin(id_pin, user_id, name, description, url)
-        for board in self.__catalog.get_all_boards():
-            if board.id_board == id_board:
-                self.__catalog.add_pin(board, pin)
+        return self.__catalog.add_pin(board, pin)
 
-    def delete_pin(self, id_pin):
+    def delete_pin(self, pin: Pin):
         """
-        This method deletes a pin from the catalog by its ID.
+        This method deletes a pin from a specific board in the catalog.
 
         Args:
-            id_pin (str): The ID of the pin to delete.
+            board (Board): The board from which the pin will be removed.
+            pin (Pin): The pin object to be removed from the board.
         """
-        for board in self.__catalog.get_all_boards():
-            for pins in board.get_all_pins():
-                if pins.id_pin == id_pin:
-                    self.__catalog.delete_pin(pins)
+        return self.__catalog.delete_pin(pin)
 
     def get_board_by_name(self, name: str) -> Board:
         """
@@ -144,4 +128,4 @@ class CatalogProxy:
         Returns:
             list[Pin]: A list of pins that belong to the specified category.
         """
-        return self.__catalog.get_pins_by_category(category)
+        return self.__catalog.get_boards_by_category(category)
