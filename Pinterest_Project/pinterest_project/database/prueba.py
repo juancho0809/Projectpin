@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, Table
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 
@@ -81,9 +82,7 @@ class User(Base):
     boards = relationship('Board', back_populates='user')
 
 # Database setup
-load_dotenv()
-
-DATABASE_CONNECTION = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_URL')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+DATABASE_CONNECTION = 'sqlite:///data.db'
 db_conn = create_engine(DATABASE_CONNECTION)
 Base.metadata.create_all(db_conn)
 
